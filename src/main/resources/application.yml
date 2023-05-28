@@ -1,0 +1,22 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    #    type: com.zaxxer.hikari.HikariDataSource
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/ludus}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: none
+
+
+  liquibase:
+    change-log: classpath:liquibase/master.yml
+    enabled: true
+
+jwt:
+  sessionTime: 3600000
+  secret: secret_key

@@ -1,0 +1,250 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: nety
+      changes:
+        - createTable:
+            tableName: player
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: login
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(320)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: team
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: logo
+                  type: varchar(320)
+        - createTable:
+            tableName: tournament
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(320)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: team_player
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: team_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: player_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: is_capitan
+                  type: boolean
+                  defaultValue: false
+        - createTable:
+            tableName: match
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: first_team_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: second_team_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: score_first_team
+                  type: integer
+                  defaultValue: 0
+              - column:
+                  name: score_second_team
+                  type: integer
+                  defaultValue: 0
+              - column:
+                  name: is_online
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: tournament_id
+                  type: bigint
+        - createTable:
+            tableName: commentator_match
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: match_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: player_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: tournament_team
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: tournament_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: team_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: tournament_id
+            baseTableName: match
+            constraintName: fk_tournament_on_match
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: tournament
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: player_id
+            baseTableName: team_player
+            constraintName: fk_team_player_on_player
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: player
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: team_id
+            baseTableName: team_player
+            constraintName: fk_team_player_on_team
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: team
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: player_id
+            baseTableName: commentator_match
+            constraintName: fk_commentator_match_on_player
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: player
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: match_id
+            baseTableName: commentator_match
+            constraintName: fk_commentator_match_on_match
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: match
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: team_id
+            baseTableName: tournament_team
+            constraintName: fk_tournament_team_on_team
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: team
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: tournament_id
+            baseTableName: tournament_team
+            constraintName: fk_tournament_team_on_tournament
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: tournament
+            validate: true
+  - changeSet:
+      id: 2
+      author: nety
+      changes:
+        - addColumn:
+            tableName: player
+            columns:
+              - column:
+                  name: rang
+                  type: integer
+        - addColumn:
+            tableName: team
+            columns:
+              - column:
+                  name: rang
+                  type: integer
+
